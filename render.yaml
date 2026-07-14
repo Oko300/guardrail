@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: guardrail
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: XLAYER_RPC_URL
+        value: https://rpc.xlayer.tech
+      - key: XLAYER_CHAIN_ID
+        value: 196
+      - key: OKX_API_KEY
+        sync: false
+      - key: OKX_API_SECRET
+        sync: false
+      - key: OKX_API_PASSPHRASE
+        sync: false
+      - key: MASTER_API_KEY
+        generateValue: true
