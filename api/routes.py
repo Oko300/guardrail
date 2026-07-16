@@ -143,7 +143,7 @@ def _calculate_risk_trend(risk_scores: List[float]) -> str:
 
 # --- Routes ---
 
-@router.get("/health", response_model=HealthResponse, summary="Health Check")
+@router.api_route("/health", methods=["GET", "HEAD"], response_model=HealthResponse, summary="Health Check")
 @limiter.limit("60/minute")
 async def health_check(request: Request):
     """
