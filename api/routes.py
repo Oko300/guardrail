@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import uuid # Added for temporary session creation
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 
@@ -195,8 +196,13 @@ async def transaction_check(request: Request, tx_request: TransactionCheckReques
     """
     start_time = datetime.now()
     session = await get_session(tx_request.session_id) # Await get_session
+
     if not session:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Session not found.")
+        # Create a temporary session if session_id does not exist
+        temp_session_id = tx_request.session_id if tx_request.session_id else str(uuid.uuid4())
+        session = await create_session(temp_session_id) # Await create_session
+        session["_temporary"] = True
+        logger.info(f"Created temporary session {session['session_id']} for missing session_id: {tx_request.session_id}")
 
     # b. If suspended — return BLOCK immediately
     if session["status"] == "suspended":

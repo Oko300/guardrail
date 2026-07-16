@@ -1,0 +1,1 @@
+﻿[{"serviceName":"GuardRail Security Monitor","serviceDescription":"Monitors AI agent transaction patterns to detect O2P attacks, behavioral drift, backrun risk, API exhaustion, and skill infection.","serviceType":"A2MCP","fee":"1","endpoint":"https://guardrail-5q4v.onrender.com/api/v1/transaction/check"}]
