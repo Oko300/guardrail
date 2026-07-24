@@ -514,11 +514,12 @@
         }
 
         function displayResult(data) {
-            verdictBadge.textContent = data.verdict;
-            verdictBadge.className = `verdict-badge verdict-${data.verdict.toLowerCase()}`;
-            compositeScore.textContent = data.composite_score;
-            action.textContent = data.action;
-            riskTrend.textContent = data.risk_trend;
+            const verdict = data.verdict || 'UNKNOWN'; // Default to 'UNKNOWN' if verdict is undefined
+            verdictBadge.textContent = verdict;
+            verdictBadge.className = `verdict-badge verdict-${verdict.toLowerCase()}`;
+            compositeScore.textContent = data.composite_score || 'N/A';
+            action.textContent = data.action || 'N/A';
+            riskTrend.textContent = data.risk_trend || 'N/A';
             resultArea.classList.add('show');
         }
 
@@ -551,8 +552,8 @@
         checkTransactionBtn.addEventListener('click', () => {
             const formData = {
                 session_id: document.getElementById('sessionId').value,
-                token_in_address: document.getElementById('tokenIn').value,
-                token_out_address: document.getElementById('tokenOut').value,
+                token_in: document.getElementById('tokenIn').value,
+                token_out: document.getElementById('tokenOut').value,
                 amount_usd: parseFloat(document.getElementById('amountUsd').value),
                 contract_address: document.getElementById('contractAddress').value,
                 transaction_type: document.getElementById('transactionType').value,
@@ -572,8 +573,8 @@
             for (let i = 0; i < 5; i++) {
                 const formData = {
                     session_id: document.getElementById('sessionId').value,
-                    token_in_address: document.getElementById('tokenIn').value,
-                    token_out_address: document.getElementById('tokenOut').value,
+                    token_in: document.getElementById('tokenIn').value,
+                    token_out: document.getElementById('tokenOut').value,
                     amount_usd: parseFloat(document.getElementById('amountUsd').value),
                     contract_address: maliciousContract,
                     transaction_type: 'approval',
