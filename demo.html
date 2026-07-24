@@ -33,7 +33,7 @@
 
         header {
             background-color: var(--card-bg);
-            padding: 15px 30px;
+            padding: 8px 30px; /* Reduced padding */
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -67,8 +67,8 @@
         main {
             flex-grow: 1;
             display: flex;
-            padding: 30px;
-            gap: 30px;
+            padding: 16px; /* Reduced padding */
+            gap: 16px; /* Reduced gap */
             max-width: 1400px;
             margin: 20px auto;
         }
@@ -76,7 +76,7 @@
         .panel {
             background-color: var(--card-bg);
             border-radius: 12px;
-            padding: 30px;
+            padding: 16px; /* Reduced padding */
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
             border: 1px solid var(--border-color);
             flex: 1;
@@ -85,7 +85,7 @@
         }
 
         .panel-title {
-            font-size: 24px;
+            font-size: 18px; /* Reduced font size */
             font-weight: 700;
             color: var(--accent-cyan-blue);
             margin-bottom: 10px;
@@ -93,7 +93,7 @@
         }
 
         .panel-subtitle {
-            font-size: 16px;
+            font-size: 12px; /* Reduced font size */
             color: var(--text-light);
             margin-bottom: 25px;
             text-align: center;
@@ -101,13 +101,13 @@
         }
 
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 8px; /* Reduced gap */
         }
 
         label {
             display: block;
             margin-bottom: 8px;
-            font-size: 14px;
+            font-size: 11px; /* Reduced font size */
             color: var(--text-light);
             opacity: 0.9;
         }
@@ -116,12 +116,12 @@
         input[type="number"],
         select {
             width: 100%;
-            padding: 12px;
+            padding: 6px 12px; /* Reduced padding */
             border-radius: 8px;
             border: 1px solid var(--border-color);
             background-color: var(--bg-dark-navy);
             color: var(--text-light);
-            font-size: 16px;
+            font-size: 13px; /* Reduced font size */
             box-sizing: border-box;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
@@ -136,10 +136,11 @@
 
         button {
             width: 100%;
-            padding: 15px;
+            height: 40px; /* Fixed height */
+            padding: 10px 15px; /* Adjusted padding */
             border-radius: 8px;
             border: none;
-            font-size: 18px;
+            font-size: 13px; /* Reduced font size */
             font-weight: 700;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
@@ -170,7 +171,7 @@
 
         .result-area {
             margin-top: 30px;
-            padding: 20px;
+            padding: 12px; /* Reduced padding */
             border-radius: 8px;
             background-color: var(--bg-dark-navy);
             border: 1px solid var(--border-color);
@@ -192,7 +193,7 @@
         }
 
         .verdict-badge {
-            font-size: 36px;
+            font-size: 24px; /* Reduced font size */
             font-weight: 700;
             padding: 10px 25px;
             border-radius: 10px;
@@ -238,9 +239,9 @@
         .session-history-entry {
             display: flex;
             align-items: center;
-            padding: 12px 0;
+            padding: 8px 0; /* Reduced padding */
             border-bottom: 1px dashed var(--border-color);
-            font-size: 15px;
+            font-size: 13px; /* Reduced font size */
         }
 
         .session-history-entry:last-child {
