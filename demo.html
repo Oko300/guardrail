@@ -527,7 +527,8 @@
             transactionCount++;
             const entry = document.createElement('div');
             entry.classList.add('session-history-entry');
-            const shortenedContract = contractAddress.substring(0, 6) + '...' + contractAddress.substring(contractAddress.length - 4);
+            const safeContractAddress = contractAddress || 'UNKNOWN_CONTRACT';
+            const shortenedContract = safeContractAddress.substring(0, 6) + '...' + safeContractAddress.substring(safeContractAddress.length - 4);
 
             entry.innerHTML = `
                 <div class="history-tx-num">${transactionCount}.</div>
