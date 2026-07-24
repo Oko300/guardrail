@@ -58,7 +58,7 @@ app = FastAPI(
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://oko300.github.io", "*"],  # Allows GitHub Pages and all other origins
+    allow_origins=["https://oko300.github.io", "https://guardrail-mauve.vercel.app", "https://guardrail-nz27hvcr6-oko300s-projects.vercel.app", "*"],  # Allows GitHub Pages, Vercel deployments, and all other origins
     allow_credentials=True,
     allow_methods=["*"],  # Allows all methods
     allow_headers=["*"],  # Allows all headers

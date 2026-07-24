@@ -10,3 +10,4 @@ build/
 venv/
 *.log
 litellm_config.yaml
+.vercel
