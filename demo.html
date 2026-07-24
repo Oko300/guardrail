@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GuardRail Security Monitor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark-navy: #0a0f1e;
+            --accent-cyan-blue: #00d4ff;
+            --text-light: #e0e0e0;
+            --text-dark: #333;
+            --card-bg: #1a2035;
+            --border-color: #2a3045;
+            --safe-color: #00ff88;
+            --warn-color: #ff9500;
+            --block-color: #ff3333;
+            --font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-dark-navy);
+            color: var(--text-light);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent-cyan-blue);
+            text-shadow: 0 0 8px rgba(0, 212, 255, 0.6);
+        }
+
+        .agent-badge {
+            background-color: var(--accent-cyan-blue);
+            color: var(--bg-dark-navy);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .agent-badge:hover {
+            background-color: #00aacc;
+            transform: translateY(-2px);
+        }
+
+        main {
+            flex-grow: 1;
+            display: flex;
+            padding: 30px;
+            gap: 30px;
+            max-width: 1400px;
+            margin: 20px auto;
+        }
+
+        .panel {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-cyan-blue);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .panel-subtitle {
+            font-size: 16px;
+            color: var(--text-light);
+            margin-bottom: 25px;
+            text-align: center;
+            opacity: 0.8;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-light);
+            opacity: 0.9;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-dark-navy);
+            color: var(--text-light);
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            border-color: var(--accent-cyan-blue);
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.3);
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            border: none;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-check {
+            background-color: var(--accent-cyan-blue);
+            color: var(--bg-dark-navy);
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+        }
+
+        .btn-check:hover {
+            background-color: #00aacc;
+            transform: translateY(-2px);
+        }
+
+        .btn-simulate {
+            background-color: #555;
+            color: var(--text-light);
+            margin-top: 15px;
+        }
+
+        .btn-simulate:hover {
+            background-color: #777;
+            transform: translateY(-2px);
+        }
+
+        .result-area {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: var(--bg-dark-navy);
+            border: 1px solid var(--border-color);
+            text-align: center;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .result-area.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .verdict-badge {
+            font-size: 36px;
+            font-weight: 700;
+            padding: 10px 25px;
+            border-radius: 10px;
+            color: var(--bg-dark-navy);
+            min-width: 150px;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .verdict-safe { background-color: var(--safe-color); }
+        .verdict-warn { background-color: var(--warn-color); }
+        .verdict-block { background-color: var(--block-color); }
+
+        .result-details {
+            font-size: 18px;
+            margin-top: 10px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .result-details span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .result-details span::before {
+            content: '•';
+            color: var(--accent-cyan-blue);
+            font-size: 20px;
+        }
+
+        .session-history {
+            flex-grow: 1;
+            background-color: var(--bg-dark-navy);
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            overflow-y: auto;
+            max-height: 600px; /* Adjust as needed */
+        }
+
+        .session-history-entry {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px dashed var(--border-color);
+            font-size: 15px;
+        }
+
+        .session-history-entry:last-child {
+            border-bottom: none;
+        }
+
+        .history-tx-num {
+            width: 40px;
+            font-weight: 700;
+            color: var(--accent-cyan-blue);
+        }
+
+        .history-contract {
+            flex-grow: 1;
+            margin-right: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .history-verdict {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--bg-dark-navy);
+            margin-right: 10px;
+        }
+
+        .history-score {
+            font-weight: 700;
+            color: var(--text-light);
+        }
+
+        .empty-history {
+            text-align: center;
+            color: #888;
+            padding: 50px 0;
+            font-style: italic;
+        }
+
+        footer {
+            background-color: var(--card-bg);
+            padding: 20px 30px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-light);
+            border-top: 1px solid var(--border-color);
+            margin-top: 30px;
+        }
+
+        footer a {
+            color: var(--accent-cyan-blue);
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #00aacc;
+            text-decoration: underline;
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid var(--bg-dark-navy);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .attack-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--block-color);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 24px;
+            font-weight: 700;
+            z-index: 1000;
+            display: none;
+            animation: flashRed 0.5s forwards;
+        }
+
+        @keyframes flashRed {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; display: none; }
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            main {
+                flex-direction: column;
+                padding: 20px;
+                margin: 10px auto;
+            }
+
+            .panel {
+                margin-bottom: 20px;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 10px;
+                padding: 15px;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+
+            .agent-badge {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+
+            .panel-title {
+                font-size: 20px;
+            }
+
+            .panel-subtitle {
+                font-size: 14px;
+            }
+
+            .verdict-badge {
+                font-size: 28px;
+                padding: 8px 20px;
+            }
+
+            .result-details {
+                flex-direction: column;
+                gap: 10px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">GuardRail</div>
+        <a href="https://okx.ai/agents/5803" target="_blank" class="agent-badge">Live on OKX.AI — Agent #5803</a>
+    </header>
+
+    <div id="attack-banner" class="attack-banner">ATTACK DETECTED</div>
+
+    <main>
+        <div class="panel">
+            <div class="panel-title">GuardRail Security Monitor</div>
+            <div class="panel-subtitle">Agent ID #5803 on OKX.AI</div>
+
+            <div class="form-group">
+                <label for="sessionId">Session ID</label>
+                <input type="text" id="sessionId" placeholder="demo-session-001" value="demo-session-001">
+            </div>
+            <div class="form-group">
+                <label for="tokenIn">Token In address</label>
+                <input type="text" id="tokenIn" value="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48">
+            </div>
+            <div class="form-group">
+                <label for="tokenOut">Token Out address</label>
+                <input type="text" id="tokenOut" value="0xdAC17F958D2ee523a2206206994597C13D831ec7">
+            </div>
+            <div class="form-group">
+                <label for="amountUsd">Amount USD</label>
+                <input type="number" id="amountUsd" value="100">
+            </div>
+            <div class="form-group">
+                <label for="contractAddress">Contract Address</label>
+                <input type="text" id="contractAddress" value="0x1111111254EEB25477B68fb85Ed929f73A960582">
+            </div>
+            <div class="form-group">
+                <label for="transactionType">Transaction Type</label>
+                <select id="transactionType">
+                    <option value="swap">Swap</option>
+                    <option value="approval">Approval</option>
+                    <option value="transfer">Transfer</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="chainId">Chain ID</label>
+                <input type="number" id="chainId" value="196">
+            </div>
+
+            <button id="checkTransactionBtn" class="btn-check">CHECK TRANSACTION <span class="loading-spinner" style="display: none;"></span></button>
+            <button id="simulateAttackBtn" class="btn-simulate">SIMULATE O2P ATTACK</button>
+
+            <div id="resultArea" class="result-area">
+                <!-- Result will be displayed here -->
+                <div id="verdictBadge" class="verdict-badge"></div>
+                <div class="result-details">
+                    <span>Composite Score: <span id="compositeScore"></span></span>
+                    <span>Action: <span id="action"></span></span>
+                    <span>Risk Trend: <span id="riskTrend"></span></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-title">Session Activity</div>
+            <div id="sessionHistory" class="session-history">
+                <div class="empty-history">No transactions checked yet</div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div>Built for OKX.AI Genesis Hackathon 2026</div>
+        <div>
+            <a href="https://guardrail-5q4v.onrender.com/docs" target="_blank">API Docs</a>
+            <a href="https://github.com/Oko300/guardrail" target="_blank">GitHub</a>
+        </div>
+    </footer>
+
+    <script>
+        const API_ENDPOINT = "https://guardrail-5q4v.onrender.com/api/v1/transaction/check";
+        const checkTransactionBtn = document.getElementById('checkTransactionBtn');
+        const simulateAttackBtn = document.getElementById('simulateAttackBtn');
+        const loadingSpinner = checkTransactionBtn.querySelector('.loading-spinner');
+        const resultArea = document.getElementById('resultArea');
+        const verdictBadge = document.getElementById('verdictBadge');
+        const compositeScore = document.getElementById('compositeScore');
+        const action = document.getElementById('action');
+        const riskTrend = document.getElementById('riskTrend');
+        const sessionHistory = document.getElementById('sessionHistory');
+        const attackBanner = document.getElementById('attack-banner');
+
+        let transactionCount = 0;
+
+        async function checkTransaction(formData, isSimulation = false) {
+            loadingSpinner.style.display = 'inline-block';
+            checkTransactionBtn.disabled = true;
+            simulateAttackBtn.disabled = true;
+
+            try {
+                const response = await fetch(API_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                const data = await response.json();
+                displayResult(data);
+                addToSessionHistory(formData.contractAddress, data.verdict, data.composite_score);
+
+                if (data.verdict === 'BLOCK') {
+                    flashRedScreen();
+                }
+            } catch (error) {
+                console.error('Error checking transaction:', error);
+                alert('Failed to check transaction. Please try again.');
+            } finally {
+                loadingSpinner.style.display = 'none';
+                checkTransactionBtn.disabled = false;
+                simulateAttackBtn.disabled = false;
+            }
+        }
+
+        function displayResult(data) {
+            verdictBadge.textContent = data.verdict;
+            verdictBadge.className = `verdict-badge verdict-${data.verdict.toLowerCase()}`;
+            compositeScore.textContent = data.composite_score;
+            action.textContent = data.action;
+            riskTrend.textContent = data.risk_trend;
+            resultArea.classList.add('show');
+        }
+
+        function addToSessionHistory(contractAddress, verdict, score) {
+            transactionCount++;
+            const entry = document.createElement('div');
+            entry.classList.add('session-history-entry');
+            const shortenedContract = contractAddress.substring(0, 6) + '...' + contractAddress.substring(contractAddress.length - 4);
+
+            entry.innerHTML = `
+                <div class="history-tx-num">${transactionCount}.</div>
+                <div class="history-contract">${shortenedContract}</div>
+                <div class="history-verdict verdict-${verdict.toLowerCase()}">${verdict}</div>
+                <div class="history-score">${score}</div>
+            `;
+            if (sessionHistory.querySelector('.empty-history')) {
+                sessionHistory.innerHTML = '';
+            }
+            sessionHistory.appendChild(entry);
+            sessionHistory.scrollTop = sessionHistory.scrollHeight; // Auto-scroll
+        }
+
+        function flashRedScreen() {
+            attackBanner.style.display = 'block';
+            setTimeout(() => {
+                attackBanner.style.display = 'none';
+            }, 1000); // Flash for 1 second
+        }
+
+        checkTransactionBtn.addEventListener('click', () => {
+            const formData = {
+                session_id: document.getElementById('sessionId').value,
+                token_in_address: document.getElementById('tokenIn').value,
+                token_out_address: document.getElementById('tokenOut').value,
+                amount_usd: parseFloat(document.getElementById('amountUsd').value),
+                contract_address: document.getElementById('contractAddress').value,
+                transaction_type: document.getElementById('transactionType').value,
+                chain_id: parseInt(document.getElementById('chainId').value),
+            };
+            checkTransaction(formData);
+        });
+
+        simulateAttackBtn.addEventListener('click', async () => {
+            simulateAttackBtn.disabled = true;
+            checkTransactionBtn.disabled = true;
+            loadingSpinner.style.display = 'inline-block';
+
+            const maliciousContract = "0xMaliciousFactory111111111111111111111111";
+            const verdicts = ['SAFE', 'WARN', 'BLOCK', 'BLOCK', 'BLOCK']; // Simulate escalating verdicts
+
+            for (let i = 0; i < 5; i++) {
+                const formData = {
+                    session_id: document.getElementById('sessionId').value,
+                    token_in_address: document.getElementById('tokenIn').value,
+                    token_out_address: document.getElementById('tokenOut').value,
+                    amount_usd: parseFloat(document.getElementById('amountUsd').value),
+                    contract_address: maliciousContract,
+                    transaction_type: 'approval',
+                    chain_id: parseInt(document.getElementById('chainId').value),
+                };
+
+                // Simulate API call and response
+                await new Promise(resolve => setTimeout(resolve, 1000)); // 1 second delay
+                const simulatedData = {
+                    verdict: verdicts[i],
+                    composite_score: (i + 1) * 20, // Escalating score
+                    action: verdicts[i] === 'BLOCK' ? 'BLOCK' : (verdicts[i] === 'WARN' ? 'WARN' : 'ALLOW'),
+                    risk_trend: i === 0 ? 'LOW' : (i < 3 ? 'MEDIUM' : 'HIGH')
+                };
+
+                displayResult(simulatedData);
+                addToSessionHistory(formData.contract_address, simulatedData.verdict, simulatedData.composite_score);
+
+                if (simulatedData.verdict === 'BLOCK') {
+                    flashRedScreen();
+                }
+            }
+
+            loadingSpinner.style.display = 'none';
+            simulateAttackBtn.disabled = false;
+            checkTransactionBtn.disabled = false;
+        });
+    </script>
+</body>
+</html>
